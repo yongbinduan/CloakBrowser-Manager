@@ -52,6 +52,8 @@ def init_db():
                 clipboard_sync BOOLEAN DEFAULT 1,
                 auto_launch BOOLEAN DEFAULT 0,
                 color_scheme TEXT,
+                launch_args TEXT DEFAULT '[]',
+                extension_paths TEXT DEFAULT '[]',
                 notes TEXT,
                 user_data_dir TEXT NOT NULL,
                 created_at TEXT NOT NULL,
