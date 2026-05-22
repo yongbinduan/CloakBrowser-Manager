@@ -214,6 +214,8 @@ class BrowserManager:
 
             # Launch CloakBrowser on that display
             # DISPLAY is passed via env kwarg to avoid process-wide os.environ mutation
+            ext_paths = profile.get("extension_paths") or None
+
             context = await launch_persistent_context_async(
                 user_data_dir=profile["user_data_dir"],
                 headless=bool(profile.get("headless", False)),
@@ -226,6 +228,7 @@ class BrowserManager:
                 geoip=bool(profile.get("geoip", False)),
                 color_scheme=profile.get("color_scheme") or None,
                 user_agent=profile.get("user_agent") or None,
+                extension_paths=ext_paths,
                 viewport={
                     "width": profile.get("screen_width", 1920),
                     "height": profile.get("screen_height", 1080) - 133,

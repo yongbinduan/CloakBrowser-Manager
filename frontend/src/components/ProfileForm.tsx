@@ -67,6 +67,7 @@ export function ProfileForm({ profile, onSave, onDelete, onCancel }: ProfileForm
     clipboard_sync: true,
     auto_launch: false,
     launch_args: [],
+    extension_paths: [],
     tags: [],
   });
 
@@ -75,6 +76,7 @@ export function ProfileForm({ profile, onSave, onDelete, onCancel }: ProfileForm
   const [tagInput, setTagInput] = useState("");
   const [tagColor, setTagColor] = useState<string | null>("#6366f1");
   const [launchArgInput, setLaunchArgInput] = useState("");
+  const [extensionPathInput, setExtensionPathInput] = useState("");
 
   useEffect(() => {
     if (profile) {
@@ -99,6 +101,7 @@ export function ProfileForm({ profile, onSave, onDelete, onCancel }: ProfileForm
         auto_launch: profile.auto_launch,
         color_scheme: profile.color_scheme,
         launch_args: profile.launch_args ?? [],
+        extension_paths: profile.extension_paths ?? [],
         notes: profile.notes,
         tags: profile.tags ?? [],
       });
@@ -169,6 +172,18 @@ export function ProfileForm({ profile, onSave, onDelete, onCancel }: ProfileForm
 
   const removeLaunchArg = (idx: number) => {
     set("launch_args", (form.launch_args ?? []).filter((_, i) => i !== idx));
+  };
+
+  const addExtensionPath = () => {
+    const p = extensionPathInput.trim();
+    if (!p) return;
+    if ((form.extension_paths ?? []).includes(p)) return;
+    set("extension_paths", [...(form.extension_paths ?? []), p]);
+    setExtensionPathInput("");
+  };
+
+  const removeExtensionPath = (idx: number) => {
+    set("extension_paths", (form.extension_paths ?? []).filter((_, i) => i !== idx));
   };
 
   return (
@@ -526,6 +541,43 @@ export function ProfileForm({ profile, onSave, onDelete, onCancel }: ProfileForm
               placeholder="Add tag..."
             />
             <button type="button" onClick={addTag} className="btn-secondary text-xs">
+              Add
+            </button>
+          </div>
+        </section>
+
+        {/* Extensions */}
+        <section>
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Extensions</h3>
+          <p className="text-xs text-gray-500 mb-2">Chrome extension directories to load at launch (absolute paths inside the container, e.g. /data/extensions/ublock)</p>
+          {(form.extension_paths ?? []).length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {(form.extension_paths ?? []).map((p, idx) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-surface-3 text-gray-300 font-mono"
+                >
+                  {p}
+                  <button
+                    type="button"
+                    onClick={() => removeExtensionPath(idx)}
+                    className="hover:opacity-70"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="flex gap-2">
+            <input
+              className="input flex-1 font-mono"
+              value={extensionPathInput}
+              onChange={(e) => setExtensionPathInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addExtensionPath(); } }}
+              placeholder="/data/extensions/ublock"
+            />
+            <button type="button" onClick={addExtensionPath} className="btn-secondary text-xs">
               Add
             </button>
           </div>

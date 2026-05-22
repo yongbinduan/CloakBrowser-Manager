@@ -24,6 +24,7 @@ export interface Profile {
   auto_launch: boolean;
   color_scheme: string | null;
   launch_args: string[];
+  extension_paths: string[];
   notes: string | null;
   user_data_dir: string;
   created_at: string;
@@ -55,6 +56,7 @@ export interface ProfileCreateData {
   auto_launch?: boolean;
   color_scheme?: string | null;
   launch_args?: string[];
+  extension_paths?: string[];
   notes?: string | null;
   tags?: { tag: string; color: string | null }[];
 }
